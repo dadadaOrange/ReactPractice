@@ -17,18 +17,25 @@ const TopicPills = (
     deleteTopic,
     updateTopic,
     editTopic,
-    okTopic
+    okTopic,
+    activeTopic,
+    setActiveTopic,
   }) =>
   <div>
     <ul className="nav nav-tabs">
       {
         topics.map(topic =>
-          <li key={topic._id} className="nav-item">
+          <li key={topic._id} className={activeTopic === topic._id || topic.editing ? "nav-item active-item" :"nav-item"}>
             <a className="nav-link">
               {
                 !topic.editing &&
                 <span>
-                  <Link to={`/edit/${course._id}/modules/${moduleId}/lessons/${lessonId}/topics/${topic._id}`}>
+                  <Link
+                      onClick={() => {
+                          setActiveTopic(topic._id);
+                      }}
+                      to={`/edit/${course._id}/modules/${moduleId}/lessons/${lessonId}/topics/${topic._id}`}
+                  >
                     {topic.title}
                   </Link>
                 <TiPencil onClick={() => editTopic(topic)}/>
@@ -62,8 +69,9 @@ const TopicPills = (
     course: state.courseReducer.course,
     moduleId: state.lessonReducer.moduleId,
     topics: state.topicReducer.topics,
-    lessonId: state.topicReducer.lessonId
-})
+    lessonId: state.topicReducer.lessonId,
+    activeTopic: state.activeItemReducer.topic,
+  })
 
 const dispatchToPropertyMapper = (dispatch) => ({
   updateTopic: (newTopic) =>
@@ -90,7 +98,11 @@ const dispatchToPropertyMapper = (dispatch) => ({
         type: "CREATE_TOPIC",
         topic: actualTopic
       })),
-
+  setActiveTopic: (topic_id) =>
+    dispatch({
+        type: "UPDATE_ACTIVE_TOPIC",
+        payload: topic_id
+    }),
   editTopic: (topic) =>
   topicService.updateTopic(topic._id,
     {

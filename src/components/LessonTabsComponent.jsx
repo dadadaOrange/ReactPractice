@@ -16,18 +16,25 @@ const LessonTabs = (
     deleteLesson,
     updateLesson,
     editLesson,
-    okLesson
+    okLesson,
+    activeLesson,
+    setActiveLesson,
   }) =>
   <div>
     <ul className="nav nav-tabs">
       {
         lessons.map(lesson =>
-          <li key={lesson._id} className="nav-item">
+          <li key={lesson._id} className={activeLesson === lesson._id || lesson.editing? "nav-item active-item" :"nav-item"}>
             <a className="nav-link">
               {
                 !lesson.editing &&
                 <span>
-                <Link to={`/edit/${course._id}/modules/${moduleId}/lessons/${lesson._id}`}>{lesson.title}</Link>
+                <Link
+                    onClick={() => {
+                        setActiveLesson(lesson._id);
+                    }}
+                    to={`/edit/${course._id}/modules/${moduleId}/lessons/${lesson._id}`}
+                >{lesson.title}</Link>
                 <TiPencil onClick={() => editLesson(lesson)}/>
                 </span>
               }
@@ -59,7 +66,8 @@ const LessonTabs = (
 const stateToPropertyMapper = (state) => ({
   course: state.courseReducer.course,
   lessons: state.lessonReducer.lessons,
-  moduleId: state.lessonReducer.moduleId
+  moduleId: state.lessonReducer.moduleId,
+  activeLesson: state.activeItemReducer.lesson,
 })
 
 const dispatchToPropertyMapper = (dispatch) => ({
@@ -74,6 +82,11 @@ const dispatchToPropertyMapper = (dispatch) => ({
         type: "DELETE_LESSON",
         lessonId: lessonId
       })),
+  setActiveLesson: (lessonId) =>
+    dispatch({
+        type: "UPDATE_ACTIVE_LESSON",
+        payload: lessonId
+    }),
   createLessonForModule: (moduleId) =>
     lessonService.createLesson(
       moduleId, {
