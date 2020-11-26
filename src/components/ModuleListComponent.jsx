@@ -13,7 +13,9 @@ const ModuleListComponent = ({
         createModule,
         updateModule,
         okModule,
-        editModule
+        editModule,
+        activeModule,
+        setActiveCourse,
 }) =>
         <div className="col-sm-4">
         <br/>
@@ -22,7 +24,7 @@ const ModuleListComponent = ({
                         <ul className="list-group">
                         {
                         modules.map(module => 
-                                <li className={"list-group-item"} key={module._id}>                
+                                <li className={activeModule === module._id ? "list-group-item active-item" :  `list-group-item ${activeModule}`} key={module._id}>
                                         {module.editing &&
                                         <div>
                                                 <input value={module.title}
@@ -36,7 +38,13 @@ const ModuleListComponent = ({
                                         }
                                         {!module.editing &&
                                                 <span>
-                                                        <Link to={`/edit/${course._id}/modules/${module._id}`}>{module.title}</Link>
+                                                        <Link
+                                                            onClick={() => {
+                                                                console.log(module._id);
+                                                                setActiveCourse(module._id);
+                                                            }}
+                                                            to={`/edit/${course._id}/modules/${module._id}`}
+                                                        >{module.title}</Link>
                                                         <span className="float-right">
                                                         <i onClick={() => editModule(module)}><TiPencil/></i>
                                                         </span>
@@ -78,6 +86,12 @@ const propertyToDispatchMapper = (dispatch) => ({
       module: module
     }),
 
+    setActiveCourse: (module_id) =>
+    dispatch({
+        type: "UPDATE_ACTIVE_COURSE",
+        payload: module_id
+    }),
+
     editModule: (module) =>
     moduleService.updateModule(module._id, {
       ...module, editing: true
@@ -99,7 +113,8 @@ const propertyToDispatchMapper = (dispatch) => ({
 
 const stateToPropertyMapper = (state) => ({
         modules: state.moduleReducer.modules,
-        course: state.courseReducer.course
+        course: state.courseReducer.course,
+        activeModule: state.activeItemReducer.module,
 })
 
 export default connect
