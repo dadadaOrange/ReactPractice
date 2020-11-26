@@ -7,7 +7,7 @@ const initialState = {
 
 const activeItemReducer = (state=initialState, {type, payload}) => {
     switch(type) {
-        case "UPDATE_ACTIVE_COURSE":
+        case "UPDATE_ACTIVE_MODULE":
             return {
                 ...state,
                 module: payload

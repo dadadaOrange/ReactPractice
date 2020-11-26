@@ -15,7 +15,7 @@ const ModuleListComponent = ({
         okModule,
         editModule,
         activeModule,
-        setActiveCourse,
+        setActiveModule,
 }) =>
         <div className="col-sm-4">
         <br/>
@@ -24,7 +24,7 @@ const ModuleListComponent = ({
                         <ul className="list-group">
                         {
                         modules.map(module => 
-                                <li className={activeModule === module._id ? "list-group-item active-item" :  `list-group-item ${activeModule}`} key={module._id}>
+                                <li className={activeModule === module._id ? "list-group-item active-item" :  "list-group-item"} key={module._id}>
                                         {module.editing &&
                                         <div>
                                                 <input value={module.title}
@@ -40,8 +40,7 @@ const ModuleListComponent = ({
                                                 <span>
                                                         <Link
                                                             onClick={() => {
-                                                                console.log(module._id);
-                                                                setActiveCourse(module._id);
+                                                                setActiveModule(module._id);
                                                             }}
                                                             to={`/edit/${course._id}/modules/${module._id}`}
                                                         >{module.title}</Link>
@@ -86,9 +85,9 @@ const propertyToDispatchMapper = (dispatch) => ({
       module: module
     }),
 
-    setActiveCourse: (module_id) =>
+    setActiveModule: (module_id) =>
     dispatch({
-        type: "UPDATE_ACTIVE_COURSE",
+        type: "UPDATE_ACTIVE_MODULE",
         payload: module_id
     }),
 
