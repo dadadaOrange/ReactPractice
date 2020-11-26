@@ -24,7 +24,7 @@ const LessonTabs = (
     <ul className="nav nav-tabs">
       {
         lessons.map(lesson =>
-          <li key={lesson._id} className={activeLesson === lesson._id ? "nav-item active-item" :"nav-item"}>
+          <li key={lesson._id} className={activeLesson === lesson._id || lesson.editing? "nav-item active-item" :"nav-item"}>
             <a className="nav-link">
               {
                 !lesson.editing &&

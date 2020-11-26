@@ -24,7 +24,7 @@ const ModuleListComponent = ({
                         <ul className="list-group">
                         {
                         modules.map(module => 
-                                <li className={activeModule === module._id ? "list-group-item active-item" :  "list-group-item"} key={module._id}>
+                                <li className={activeModule === module._id || module.editing ? "list-group-item active-item" :  "list-group-item"} key={module._id}>
                                         {module.editing &&
                                         <div>
                                                 <input value={module.title}

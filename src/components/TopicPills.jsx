@@ -25,7 +25,7 @@ const TopicPills = (
     <ul className="nav nav-tabs">
       {
         topics.map(topic =>
-          <li key={topic._id} className={activeTopic === topic._id ? "nav-item active-item" :"nav-item"}>
+          <li key={topic._id} className={activeTopic === topic._id || topic.editing ? "nav-item active-item" :"nav-item"}>
             <a className="nav-link">
               {
                 !topic.editing &&
