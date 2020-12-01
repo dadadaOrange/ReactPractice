@@ -1,31 +1,22 @@
 import React from "react";
-// import TopicService from "../../services/TopicService";
-// import WidgetService from "../../services/WidgetService";
-// import {UPDATE_WIDGET} from "../../actions/widgetActions";
-// import {connect} from "react-redux";
-const HeadingWidget= ({widget, updateWidget,editWidget, ok, createWidgetForTopic,deleteWidget,up, down,topicId,widgets, index})=>
+
+const HeadingWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, down, widgets, index})=>
     <div>
+        <span>
+            <h2>Heading Widget</h2>
+            {
+                (index!==0)&&
+                <button onClick={()=>up(index)} className="btn btn-warning"><i className="arrow up"></i></button>
+            }
+            {
+                (index!=widgets.length-1)&&
+                <button onClick={()=>down(index)} className="btn btn-warning"><i className="arrow down"></i></button>
+            }
+        </span>
         <div>
             {
                 widget.editing&&
                 <div className={"non-preview-container"}>
-                    <div>
-                        {widget.name}
-                        {
-                            index===0&&
-                            <button onClick={()=>down(widget,widgets,topicId)} className="btn btn-warning"><i className="fa fa-arrow-down"></i></button>||
-                            index===widgets.length-1&&
-                            <button onClick={()=>up(widget,widgets,topicId)} className="btn btn-warning"><i className="fa fa-arrow-up"></i></button>
-                        }
-                        {
-                            index!==0&index!==widgets.length-1&&
-                            <div>
-                            <button onClick={()=>down(widget,widgets,topicId)} className="btn btn-warning"><i className="fa fa-arrow-down"></i></button>
-                            <button onClick={()=>up(widget,widgets,topicId)} className="btn btn-warning"><i className="fa fa-arrow-up"></i></button>
-                            </div>
-                        }
-                        <button onClick={()=>deleteWidget(widget)} className="pull-right btn btn-danger"><i className="fa fa-trash"></i></button>
-                    </div>
                         <div className="input-group flex-nowrap">
                             <label  className="col-sm-3 col-form-label">
                                 Widget Type</label>
@@ -89,35 +80,35 @@ const HeadingWidget= ({widget, updateWidget,editWidget, ok, createWidgetForTopic
                         <option value="5">Heading 5</option>
                     </select>
                     </div>
-
-
-                    <button className="btn btn-success" onClick={()=>ok(widget)}><i className="fa fa-check"></i></button>
+                    <button className="btn btn-success" onClick={()=>ok(widget)}>OK</button>
                 </div>
             }
-            {
-                !widget.editing&&
-                <div>
-
+            <div>
+                <h2>Preview</h2>
+                {widget.size===1&&
+                <h1>{widget.text}</h1>}
+                {widget.size===2&&
+                <h2>{widget.text}</h2>}
+                {widget.size===3&&
+                <h3>{widget.text}</h3>}
+                {widget.size===4&&
+                <h4>{widget.text}</h4>}
+                {widget.size===5&&
+                <h5>{widget.text}</h5>}
+                <span>
                     {
-                        widget.size===1&&
-                        <h1>{widget.text}</h1>
-                        ||widget.size===2&&
-                        <h2>{widget.text}</h2>
-                        ||widget.size===3&&
-                        <h3>{widget.text}</h3>
-                        ||widget.size===4&&
-                        <h4>{widget.text}</h4>
-                        ||widget.size===5&&
-                        <h5>{widget.text}</h5>
-
+                        !widget.editing&&
+                        <button className="btn btn-warning" onClick={()=>editWidget(widget)}>Edit</button>
                     }
-                    <button className="btn btn-warning" onClick={()=>editWidget(widget)}><i className="fa fa-pencil"></i></button>
-                </div>
-            }
+                    <button onClick={() => deleteWidget(widget)}
+                            className="btn btn-sm btn-primary">
+                        Delete
+                    </button>
+                </span>
+            </div>
+
 
         </div>
     </div>
 
 export default HeadingWidget
-
-

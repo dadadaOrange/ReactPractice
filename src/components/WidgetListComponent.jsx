@@ -1,14 +1,15 @@
+
 import React from 'react';
-import {Button} from 'react-bootstrap';
 import {connect} from "react-redux";
 import {
     deleteWidget,
     createWidget,
     updateWidget,
     editWidget,
-    okWidget
+    okWidget,
+    upWidget,
+    downWidget,
 } from "../actions/widgetActions";
-import {FaToggleOff} from 'react-icons/fa';
 import {IoMdAddCircleOutline} from 'react-icons/io';
 import HeadingWidget from './widgets/HeadingWidget';
 import ParagraphWidget from './widgets/ParagraphWidget';
@@ -22,97 +23,51 @@ const WidgetList = ({
                         ok,
                         up,
                         down,
-                        topicId
                     }) =>
     <div>
-        <div className="wbdv-light-gray-border">
-                                <span className="pull-right float-right">
-                                    <a href="#" className="btn btn-sm btn-success">save</a>
-                                    &nbsp;
-                                    <a href="#">Preview</a>
-                                    <a href="#" className="btn">
-                                        <FaToggleOff/>
-                                    </a>
-                                </span>
-            <br/>
-            <br/>
-
-            <HeadingWidget/>
-            <ParagraphWidget/>
-         
-            <i className="float-right btn btn-md btn-danger" aria-hidden="true">
-                <IoMdAddCircleOutline onClick={createWidget}/>
-            </i>
+        <div className="wbdv-light-gray-border flex-nowrap">
+            <a href="#" className="btn btn-sm btn-success">save</a>
         </div>
                 <ul>
                 {
                 widgets.map((widget,index) =>
-                                <li>
+                                <li key={widget.id}>
                                     {
-                                    widget.type== "Heading"&&
-                                      <HeadingWidget widget={widget}
-                                                     topicId={topicId}
-                                                     updateWidget={updateWidget}
-                                                     deleteWidget={deleteWidget}
-                                                     editWidget={editWidget}
-                                                     ok={ok}
-                                                     up={up}
-                                                     widgets={widgets}
-                                                     down={down}
-                                                     index={index}
-
-
-                                      />||
-                                      widget.type== "Paragraph"&&
-                                      <ParagraphWidget widget={widget}
-
-                                                       topicId={topicId}
-                                                       updateWidget={updateWidget}
-                                                       deleteWidget={deleteWidget}
-                                                       editWidget={editWidget}
-                                                       ok={ok}
-                                                       up={up}
-                                                       widgets={widgets}
-                                                       down={down}
-                                                       index={index}
-                                                        />
+                                        widget.type == "Heading" &&
+                                        <HeadingWidget
+                                            widget={widget}
+                                            updateWidget={updateWidget}
+                                            deleteWidget={deleteWidget}
+                                            editWidget={editWidget}
+                                            ok={ok}
+                                            up={up}
+                                            widgets={widgets}
+                                            down={down}
+                                            index={index}
+                                        />
+                                    }
+                                    {
+                                        widget.type== "Paragraph"&&
+                                        <ParagraphWidget
+                                            widget={widget}
+                                            updateWidget={updateWidget}
+                                            deleteWidget={deleteWidget}
+                                            editWidget={editWidget}
+                                            ok={ok}
+                                            up={up}
+                                            widgets={widgets}
+                                            down={down}
+                                            index={index}
+                                        />
 
                                     }
                                 </li>
                 )
             }
         </ul>
-        <ul>
-            {
-            widgets.map(widget =>
-            <li>
-                {widget.editing &&
-                    <div>
-                        <input value={widget.name}
-                            onChange={(event) => updateWidget({
-                                ...widget,
-                                name: event.target.value
-                                                                })}/>
-                        <Button className="btn btn-sm btn-info"
-                                onClick={() => okWidget(widget)}>OK</Button>
-                    </div>
-
-                }
-                {!widget.editing &&
-                    <span>{widget.name}
-                        <button onClick={() => editWidget(widget)}
-                                className="btn btn-sm btn-info">
-                    Edit
-                </button>
-                    <button onClick={() => deleteWidget(widget)}
-                            className="btn btn-sm btn-primary">
-                        Delete
-                    </button>
-                </span>}
-            </li>
-            )
-            }
-        </ul>
+        <i className="float-right btn btn-md btn-danger" aria-hidden="true">
+            <IoMdAddCircleOutline onClick={createWidget}/>
+        </i>
     </div>
 
 const propertyToDispatchMapper = (dispatch) => ({
@@ -120,11 +75,14 @@ const propertyToDispatchMapper = (dispatch) => ({
     createWidget: () => createWidget(dispatch),
     updateWidget: (widget) => updateWidget(dispatch, widget),
     editWidget: (widget) => editWidget(dispatch, widget),
-    okWidget: (widget) => okWidget(dispatch, widget),
+    ok: (widget) => okWidget(dispatch, widget),
+    up: (widgetIdx) => upWidget(dispatch, widgetIdx),
+    down: (widgetIdx) => downWidget(dispatch, widgetIdx),
 })
 
 const stateToPropertyMapper = (state) => ({
-    widgets: state.widgetReducer.widgets
+    widgets: state.widgetReducer.widgets,
+    preview: state.widgetReducer.preview,
 })
 
 export default connect
