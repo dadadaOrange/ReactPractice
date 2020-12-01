@@ -1,44 +1,70 @@
 import React from 'react';
 import {FaTrashAlt} from 'react-icons/fa';
 import {ImArrowUp2, ImArrowDown2} from 'react-icons/im';
-class HeadingWidget1 extends React.Component {
-    render() { 
-        return (
-            <form>
-            <h3 className="form-group"> Heading Widget
-                <span className="float-right">
-                    <button href="#" className="btn btn-sm btn-warning">
-                        <ImArrowUp2/>
-                    </button>
-                    &nbsp;
-                    <button className="btn btn-sm btn-warning">
-                        <ImArrowDown2/>
-                    </button>
-                    &nbsp;
-                    <select>
-                        <option className="active">Heading</option>
-                        <option>YouTube</option>
-                        <option>Paragraph</option>
-                        <option>Image</option>
-                        <option>List</option>
-                    </select>
-                    &nbsp;
-                    <a href="#" className="btn btn-sm btn-danger">
-                        <FaTrashAlt/>
-                    </a>
-                </span>
-            </h3>
-            <div class="form-group">
-                <input className="form-control" placeholder="http://localhost:8080"/>  
+const ImageWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, down,widgets, index}) =>
+    <form>
+        <h3 className="form-group"> Image Widget</h3>
+        <span className="float-right">
+            {
+                (index!==0)&&
+                <ImArrowUp2 onClick={()=>up(index)}/>
+            }
+            {
+                (index!==widgets.length-1)&&
+                <ImArrowDown2 onClick={()=>down(index)} />
+            }
+            &nbsp;
+            <a href="#" className="btn btn-sm btn-danger" onClick={() => deleteWidget(widget)}>
+                <FaTrashAlt/>
+            </a>
+            {
+                !widget.editing ?
+                <button className="btn btn-warning" onClick={()=>editWidget(widget)}>Edit</button>
+                    :
+                <button className="btn btn-success" onClick={()=>ok(widget)}>OK</button>
+            }
+        </span>
+        &nbsp;
+            {
+            widget.editing&&
+            <div>
+                <select
+                    onChange={event => updateWidget({
+                        ...widget,
+                        type:event.target.value
+                    })}
+                    value={widget.type}
+                    className="form-control"
+                    style={{marginTop: '10px'}}>
+                >
+                    <option className="active">Heading</option>
+                    <option>Paragraph</option>
+                    <option>Image</option>
+                    <option>List</option>
+                </select>
+                <div className="form-group">
+                    <input className="form-control"
+                           onChange={event => updateWidget({
+                               ...widget,
+                               text:event.target.value
+                           })}
+                           value={widget.text}
+                           placeholder="http://localhost:8080"/>
+                </div>
+                <div className="form-group">
+                    <input className="form-control"
+                           onChange={event => updateWidget({
+                               ...widget,
+                               name:event.target.value
+                           })}
+                           value={widget.name}
+                           placeholder={widget.name}/>
+                </div>
             </div>
-            <div class="form-group">
-               <input className="form-control" placeholder="Widget name"/>     
-            </div>
-            <h4>Preview</h4>
-            <img src="../../resources/images/logo.JPG" width="500" height="333"></img>
-            </form> 
-          );
-    }
-}
+        }
+
+        <h4>Preview</h4>
+        <img src={widget.text} width="500" height="333"/>
+    </form>
  
-export default HeadingWidget1;
+export default ImageWidget;

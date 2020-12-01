@@ -13,6 +13,8 @@ import {
 import {IoMdAddCircleOutline} from 'react-icons/io';
 import HeadingWidget from './widgets/HeadingWidget';
 import ParagraphWidget from './widgets/ParagraphWidget';
+import ListWidget from "./widgets/ListWidget";
+import ImageWidget from "./widgets/ImageWidget";
 
 const WidgetList = ({
                         widgets = [],
@@ -49,6 +51,36 @@ const WidgetList = ({
                                     {
                                         widget.type== "Paragraph"&&
                                         <ParagraphWidget
+                                            widget={widget}
+                                            updateWidget={updateWidget}
+                                            deleteWidget={deleteWidget}
+                                            editWidget={editWidget}
+                                            ok={ok}
+                                            up={up}
+                                            widgets={widgets}
+                                            down={down}
+                                            index={index}
+                                        />
+
+                                    }
+                                    {
+                                        widget.type== "List"&&
+                                        <ListWidget
+                                            widget={widget}
+                                            updateWidget={updateWidget}
+                                            deleteWidget={deleteWidget}
+                                            editWidget={editWidget}
+                                            ok={ok}
+                                            up={up}
+                                            widgets={widgets}
+                                            down={down}
+                                            index={index}
+                                        />
+
+                                    }
+                                    {
+                                        widget.type== "Image"&&
+                                        <ImageWidget
                                             widget={widget}
                                             updateWidget={updateWidget}
                                             deleteWidget={deleteWidget}

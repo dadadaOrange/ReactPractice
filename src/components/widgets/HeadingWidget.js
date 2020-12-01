@@ -1,16 +1,29 @@
 import React from "react";
+import {ImArrowUp2, ImArrowDown2} from 'react-icons/im';
+import {FaTrashAlt} from 'react-icons/fa';
+
 
 const HeadingWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, down, widgets, index})=>
     <div>
-        <span>
-            <h2>Heading Widget</h2>
+        <h3>Heading Widget</h3>
+        <span className="float-right">
+                {
+                    (index!==0)&&
+                    <ImArrowUp2 onClick={()=>up(index)}/>
+                }
             {
-                (index!==0)&&
-                <button onClick={()=>up(index)} className="btn btn-warning"><i className="arrow up"></i></button>
+                (index!==widgets.length-1)&&
+                <ImArrowDown2 onClick={()=>down(index)} />
             }
+            &nbsp;
+            <a href="#" className="btn btn-sm btn-danger" onClick={() => deleteWidget(widget)}>
+                <FaTrashAlt/>
+            </a>
             {
-                (index!=widgets.length-1)&&
-                <button onClick={()=>down(index)} className="btn btn-warning"><i className="arrow down"></i></button>
+                !widget.editing ?
+                    <button className="btn btn-warning" onClick={()=>editWidget(widget)}>Edit</button>
+                    :
+                    <button className="btn btn-success" onClick={()=>ok(widget)}>OK</button>
             }
         </span>
         <div>
@@ -21,7 +34,6 @@ const HeadingWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, d
                             <label  className="col-sm-3 col-form-label">
                                 Widget Type</label>
                         <select
-                            id={"headingSize"}
                             onChange={event => updateWidget({
                                                                 ...widget,
                                                                 type:event.target.value
@@ -29,11 +41,10 @@ const HeadingWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, d
                             value={widget.type}
                             className="form-control"
                             style={{marginTop: '10px'}}>
-                            <option value="Heading">Heading</option>
-                            <option value="Paragraph">Paragraph</option>
-                            <option value="List">List</option>
-                            <option value="Hyperlink">Hyperlink</option>
-                            <option value="Video">Video</option>
+                            <option className="active">Heading</option>
+                            <option>Paragraph</option>
+                            <option>Image</option>
+                            <option>List</option>
                         </select>
                         </div>
                     <div className="input-group flex-nowrap">
@@ -58,7 +69,7 @@ const HeadingWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, d
                                                                text:event.target.value
                                                            })}
                            value={widget.text}
-                           placeholder="text"></input>
+                           placeholder="text"/>
                     </div>
                     <div className="input-group flex-nowrap">
                         <label  className="col-sm-3 col-form-label">
@@ -80,7 +91,6 @@ const HeadingWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, d
                         <option value="5">Heading 5</option>
                     </select>
                     </div>
-                    <button className="btn btn-success" onClick={()=>ok(widget)}>OK</button>
                 </div>
             }
             <div>
@@ -95,16 +105,6 @@ const HeadingWidget= ({widget, updateWidget, editWidget, ok, deleteWidget, up, d
                 <h4>{widget.text}</h4>}
                 {widget.size===5&&
                 <h5>{widget.text}</h5>}
-                <span>
-                    {
-                        !widget.editing&&
-                        <button className="btn btn-warning" onClick={()=>editWidget(widget)}>Edit</button>
-                    }
-                    <button onClick={() => deleteWidget(widget)}
-                            className="btn btn-sm btn-primary">
-                        Delete
-                    </button>
-                </span>
             </div>
 
 
