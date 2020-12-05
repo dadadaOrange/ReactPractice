@@ -15,8 +15,10 @@ import HeadingWidget from './widgets/HeadingWidget';
 import ParagraphWidget from './widgets/ParagraphWidget';
 import ListWidget from "./widgets/ListWidget";
 import ImageWidget from "./widgets/ImageWidget";
+import WidgetService from "../services/WidgetService";
 
 const WidgetList = ({
+                        createWidgetForTopic,
                         widgets = [],
                         createWidget,
                         deleteWidget,
@@ -25,10 +27,11 @@ const WidgetList = ({
                         ok,
                         up,
                         down,
+                        topicId,
                     }) =>
     <div>
         <div className="wbdv-light-gray-border flex-nowrap">
-            <a href="#" className="btn btn-sm btn-success">save</a>
+            <a href="#" className="btn btn-sm btn-success" onClick={()=>createWidgetForTopic(topicId,widgets)}>save</a>
         </div>
                 <ul>
                 {
@@ -103,6 +106,12 @@ const WidgetList = ({
     </div>
 
 const propertyToDispatchMapper = (dispatch) => ({
+    createWidgetForTopic: (topicId, widgets) => WidgetService.createWidget(topicId,widgets)
+        .then(actualWidget => dispatch({
+            type:"CREATE_WIDGET",
+            widget: actualWidget
+
+        })),
     deleteWidget: (widget) => deleteWidget(dispatch, widget),
     createWidget: () => createWidget(dispatch),
     updateWidget: (widget) => updateWidget(dispatch, widget),
@@ -115,6 +124,7 @@ const propertyToDispatchMapper = (dispatch) => ({
 const stateToPropertyMapper = (state) => ({
     widgets: state.widgetReducer.widgets,
     preview: state.widgetReducer.preview,
+    topicId: state.activeItemReducer.topic,
 })
 
 export default connect
