@@ -1,17 +1,17 @@
 import React from 'react';
 import {FaTrashAlt} from 'react-icons/fa';
 import {ImArrowUp2, ImArrowDown2} from 'react-icons/im';
-const ListWidget = ({widget, updateWidget, editWidget, ok, deleteWidget, up, down, widgets, index})=>
+const ListWidget = ({widget, updateWidget, editWidget, ok, deleteWidget, up, down, widgets, index, topicId})=>
     <form>
         <h3 className="form-group"> List Widget</h3>
         <span className="float-right">
                 {
                     (index!==0)&&
-                    <ImArrowUp2 onClick={()=>up(index)}/>
+                    <ImArrowUp2 onClick={()=>up(widget, widgets, topicId)}/>
                 }
             {
                 (index!==widgets.length-1)&&
-                <ImArrowDown2 onClick={()=>down(index)} />
+                <ImArrowDown2 onClick={()=>down(widget, widgets, topicId)} />
             }
             &nbsp;
             <a href="#" className="btn btn-sm btn-danger" onClick={() => deleteWidget(widget)}>

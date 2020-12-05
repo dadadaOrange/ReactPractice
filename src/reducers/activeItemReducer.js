@@ -10,12 +10,15 @@ const activeItemReducer = (state=initialState, {type, payload}) => {
         case "UPDATE_ACTIVE_MODULE":
             return {
                 ...state,
-                module: payload
+                module: payload,
+                lesson: null,
+                topic: null,
             };
         case "UPDATE_ACTIVE_LESSON":
             return {
                 ...state,
-                lesson: payload
+                lesson: payload,
+                topic: null,
             };
         case "UPDATE_ACTIVE_TOPIC":
             return {

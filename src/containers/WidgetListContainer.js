@@ -1,14 +1,22 @@
 import React from "react";
-import WidgetListComponent from "../component/WidgetListComponent";
+import WidgetListComponent from "../components/WidgetListComponent";
 import {connect} from "react-redux";
-import {createWidget,okWidget, UPDATE_WIDGET} from "../actions/WidgetActions";
+import {editWidget, UPDATE_WIDGET} from "../actions/widgetActions";
+import WidgetService from "../services/WidgetService";
 
 const stateToPropertyMapper = (state) => ({
-    widgets: state.widgetsReducer.widgets,
-    topicId: state.widgetsReducer.topicId
+    widgets: state.widgetReducer.widgets,
+    topicId: state.activeItemReducer.topic
 })
 
 const propertyToDispatchMapper = (dispatch) => ({
+    findWidgetsForTopic: (topicId) => WidgetService.findWidgetsForTopic(topicId).then((widgets)=>{
+        dispatch({
+            type:"FIND_ALL_WIDGETS_FOR_TOPIC",
+            widgets,
+            topicId
+        })
+    }),
     createWidgetForTopic: (topicId, order) => WidgetService.createWidget(topicId,{
         name:"Install React",
         type:"Heading",
@@ -19,35 +27,31 @@ const propertyToDispatchMapper = (dispatch) => ({
                                     widget: actualWidget
 
                                     })),
-    editWidget: (widget) =>
-        WidgetService.updateWidget(widget.id,{
-            ...widget, editing: true
-        }).then(status=> dispatch({
-                                      type:UPDATE_WIDGET,
-                                      widget: {...widget, editing: true}
-                                  })),
+
+    editWidget: (widget) => editWidget(dispatch, widget),
+
     ok: (widget) =>
-        WidgetService.updateWidget(widget.id,{
+        WidgetService.updateWidget(widget._id,{
             ...widget, editing: false
-        }).then(status=> dispatch({
-                                    type: UPDATE_WIDGET,
-                                    widget: {...widget, editing: false}
+        }).then(()=> dispatch({
+                                      type:UPDATE_WIDGET,
+                                      widget: {...widget, editing: false}
                                   })),
     up: (widget, widgets,topicId) =>{
         let allWidgets = widgets;
-        let i = allWidgets.findIndex(w => w.id == widget.id);
+        let i = allWidgets.findIndex(w => w._id === widget._id);
         let downWidget= allWidgets[i-1]
         let newo =downWidget.widgetOrder
         let oldo=widget.widgetOrder
 
-        WidgetService.updateWidget(widget.id,{...widget, editing:false,widgetOrder:newo}).then(
+        WidgetService.updateWidget(widget._id,{...widget, editing:false,widgetOrder:newo}).then(
             actualWidget => dispatch({
                 type: UPDATE_WIDGET,
                 widget : {...widget, widgetOrder:newo,editing: false}
                                })
         )
 
-        WidgetService.updateWidget(downWidget.id,{...downWidget,editing:false,widgetOrder:oldo}).then(
+        WidgetService.updateWidget(downWidget._id,{...downWidget,editing:false,widgetOrder:oldo}).then(
             actualWidget => dispatch({
                                          type: UPDATE_WIDGET,
                                          widget : {...widget, editing:false,widgetOrder:oldo}
@@ -65,19 +69,19 @@ const propertyToDispatchMapper = (dispatch) => ({
 
     down:(widget, widgets,topicId) => {
         let allWidgets = widgets;
-        let i = allWidgets.findIndex(w => w.id == widget.id);
+        let i = allWidgets.findIndex(w => w._id == widget._id);
         let downWidget= allWidgets[i+1]
         let newo =downWidget.widgetOrder
         let oldo=widget.widgetOrder
 
-        WidgetService.updateWidget(widget.id,{...widget, widgetOrder:newo}).then(
+        WidgetService.updateWidget(widget._id,{...widget, widgetOrder:newo}).then(
             actualWidget => dispatch({
                                          type: UPDATE_WIDGET,
                                          widget : {...widget, editing:false,widgetOrder:newo}
                                      })
         )
         console.log("here",widget)
-        WidgetService.updateWidget(downWidget.id,{...downWidget,widgetOrder:oldo}).then(
+        WidgetService.updateWidget(downWidget._id,{...downWidget,widgetOrder:oldo}).then(
             actualWidget => dispatch({
                                          type: UPDATE_WIDGET,
                                          widget : {...widget, editWidget:false,widgetOrder:oldo}
@@ -95,21 +99,17 @@ const propertyToDispatchMapper = (dispatch) => ({
     },
     
     deleteWidget: (widget)=>{
-        WidgetService.deleteWidget(widget.id)
+        WidgetService.deleteWidget(widget._id)
         .then(status => dispatch({
             type: "DELETE_WIDGET",
-            widgetId:widget.id
+            widgetId:widget._id
                                  }))
     },
-
-    createWidget: () => createWidget(dispatch),
     updateWidget: (widget) =>
         dispatch({
                      type: "UPDATE_WIDGET",
                      widget: widget
                  }),
-
-    okWidget: (widget) => okWidget(dispatch, widget)
 })
 
 export default connect(stateToPropertyMapper, propertyToDispatchMapper)
