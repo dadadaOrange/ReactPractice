@@ -1,7 +1,7 @@
 import React from "react";
 import TopicPills from "../components/TopicPills";
 import LessonTabs from "../components/LessonTabsComponent";
-import WidgetListComponent from "../components/WidgetListComponent";
+import WidgetListComponent from "./WidgetListContainer";
 import ModuleListComponent from "../components/ModuleListComponent";
 import { connect } from "react-redux";
 import {findCourseById} from '../services/CourseService'

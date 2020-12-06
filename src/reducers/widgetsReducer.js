@@ -41,24 +41,19 @@ const widgetsReducer =(state =initialState, action) =>{
             return {
                 ...state,
                 widgets: [...state.widgets,
-                    {
-                        id:Date.now(),
-                        type:"Heading",
-                        size:1,
-                        editing: true,
-                    }]
+                    action.widget]
             }
         case UPDATE_WIDGET:
             return {
                 ...state,
                 widgets: state.widgets.map(
-                    widget => widget.id===action.widget.id ?
+                    widget => widget._id===action.widget._id ?
                         action.widget: widget)
             };
         case DELETE_WIDGET:
             return {
                 ...state,
-                widgets: state.widgets.filter(widget=> widget.id!==action.widget.id)
+                widgets: state.widgets.filter(widget=> widget._id!==action.widgetId)
             };
         case WIDGET_POSITION_UP:
             return {
